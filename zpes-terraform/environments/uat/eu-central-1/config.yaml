@@ -1,0 +1,90 @@
+basic:
+  resource-prefix: aws-zpes-eu
+  iam-prefix:
+  tags:
+    product_code: ZPES-DIGITAL
+    product_name: ZPES-DIGITAL-EU
+
+vpc:
+  name: zeekr-test-vpc
+  private-az-list:
+    - zeekr-test-private-a
+    - zeekr-test-private-b
+  public-az-list:
+    - zeekr-test-public-a
+    - zeekr-test-public-b
+
+redis:
+  create: true
+  create-private-subnet-group: false
+  private-subnet-group: uat-redis-private-subnet-group
+  create_cloudwatch_log_group: true
+  config:
+    infix_name: cache
+    engine: redis
+    engine_version: 6.2
+    node_type: cache.m6g.large
+    num_cache_clusters: 2
+
+
+mysql:
+  create: true
+  create-private-subnet-group: false
+  private-subnet-group: uat-rds-private-subnet-group
+  config:
+    infix_name: data
+    engine: mysql
+    engine_version: 8.0.35
+    instance_class: db.m5.large
+    db_name: zpes
+    backup_retention_period: 7
+
+redshift:
+  create: false
+  create-private-subnet-group: false
+  private-subnet-group: uat-redshift-private-subnet-group
+  config:
+    infix_name: data
+    database_name: zpes
+    skip_final_snapshot: true
+    node_type: ra3.xlplus
+    number_of_nodes: 1
+    encrypted: true
+
+kafka:
+  front:
+    create: false
+    config:
+      kafka_version: 2.8.1
+      number_of_broker_nodes: 2
+      broker_node_instance_type: kafka.m5.large
+      storage_volume_size: 500
+      create_configuration: true
+
+      configuration_server_properties: |
+        default.replication.factor=2
+        min.insync.replicas=1
+        log.retention.hours=24
+  back:
+    create: false
+
+iam:
+  service-role:
+    glue:
+      S3:
+        - a
+        - b
+flink:
+  m241-log-metadata:
+    create: true
+    config:
+      runtime_environment: FLINK-1_15
+glue:
+  m241-zpes-all-data:
+    create: true
+  m241-zpes-raw-body:
+    create: false
+
+
+
+

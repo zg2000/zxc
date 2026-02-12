@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    alb.ingress.kubernetes.io/certificate-arn: {{ .Values.ingress.privateCertificateArn }}
+    alb.ingress.kubernetes.io/group.name: {{ .Values.ingress.privateGroupName }}
+    alb.ingress.kubernetes.io/group.order: "0"
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443},{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/success-codes: 200-499
+    alb.ingress.kubernetes.io/target-type: ip
+  name: zxc-gateway-private-ingress
+spec:
+  ingressClassName: alb
+  rules:
+  - host: {{ .Values.ingress.zxcHost }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: apisix-gateway
+            port:
+              number: 80
+        path: /
+        pathType: Prefix

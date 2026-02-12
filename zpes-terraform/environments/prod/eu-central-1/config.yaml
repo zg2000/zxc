@@ -1,0 +1,95 @@
+basic:
+  resource-prefix: aws-zpes-eu
+  iam-prefix:
+  tags:
+    product_code: ZPES-DIGITAL
+    product_name: ZPES-DIGITAL-EU
+
+vpc:
+  name: zeekr-prod-vpc
+  private-az-list:
+    - zeekr-prod-private-b
+    - zeekr-prod-private-c
+  public-az-list:
+    - zeekr-prod-public-b
+    - zeekr-prod-public-c
+
+redis:
+  create: true
+  create-private-subnet-group: false
+  private-subnet-group: redis-private-bc
+  create_cloudwatch_log_group: true
+  config:
+    infix_name: cache
+    engine: redis
+    engine_version: 6.2
+    node_type: cache.t4g.medium
+    num_cache_clusters: 2
+
+mysql:
+  create: true
+  create-private-subnet-group: false
+  private-subnet-group: mysql-private-bc
+  config:
+    infix_name: data
+    engine: mysql
+    engine_version: 8.0.35
+    instance_class: db.m6g.xlarge
+    db_name: zpes
+    backup_retention_period: 7
+
+mysql_job:
+  create: true
+  create-private-subnet-group: false
+  private-subnet-group: mysql-private-bc
+  config:
+    infix_name: zpesjob
+    engine: mysql
+    engine_version: 8.0.35
+    instance_class: db.m6g.xlarge
+    db_name: zpes
+    backup_retention_period: 7
+
+redshift:
+  create: true
+  create-private-subnet-group: false
+  private-subnet-group: redshift-prod-subnet-group
+  config:
+    infix_name: data
+    database_name: zpes
+    skip_final_snapshot: true
+    node_type: ra3.xlplus
+    number_of_nodes: 2
+    encrypted: true
+
+kafka:
+  front:
+    create: true
+    config:
+      kafka_version: 2.8.1
+      number_of_broker_nodes: 2
+      broker_node_instance_type: kafka.m5.large
+      storage_volume_size: 100
+      create_configuration: true
+
+      configuration_server_properties: |
+        default.replication.factor=2
+        min.insync.replicas=1
+        log.retention.hours=72
+
+flink:
+  m241-log-metadata:
+    create: true
+    config:
+      runtime_environment: FLINK-1_15
+      inputKafkaBootstrapServers: "b-1.awszxceuexternalpro.hen66h.c4.kafka.eu-central-1.amazonaws.com:9092,b-2.awszxceuexternalpro.hen66h.c4.kafka.eu-central-1.amazonaws.com:9092"
+      # inputKafkaBootstrapServers: "b-1.awszxceuinternalpro.sa5fo5.c4.kafka.eu-central-1.amazonaws.com:9092,b-2.awszxceuinternalpro.sa5fo5.c4.kafka.eu-central-1.amazonaws.com:9092"
+      inputKafkaGroupId: "zpes_edge_log_metadata_prod_group"
+      inputKafkaTopic: "edge_log_oss_notify_prod_topic"
+  m241-file-metadata:
+    create: true
+    config:
+      runtime_environment: FLINK-1_15
+      inputKafkaBootstrapServers: "b-1.awszxceuexternalpro.hen66h.c4.kafka.eu-central-1.amazonaws.com:9092,b-2.awszxceuexternalpro.hen66h.c4.kafka.eu-central-1.amazonaws.com:9092"
+      inputKafkaGroupId: "edge_alg_oss_notify_prod_group"
+      inputKafkaTopic: "edge_alg_oss_notify_prod_topic"

@@ -1,0 +1,6 @@
+env             = "prod"
+aws_region      = "eu-central-1"
+aws_account_id  = "866665982863"
+zeekr_root_user = "zeekroot"
+vdp_front_kafka_brokers = "b-1.awszdvdpeupostsalep.k5iox9.c4.kafka.eu-central-1.amazonaws.com:9092,b-2.awszdvdpeupostsalep.k5iox9.c4.kafka.eu-central-1.amazonaws.com:9092,b-3.awszdvdpeupostsalep.k5iox9.c4.kafka.eu-central-1.amazonaws.com:9092"
+vdp_front_kafka_sg_id = "sg-00a0430590aecfb03"

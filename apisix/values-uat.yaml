@@ -1,0 +1,23 @@
+config:
+  userName: zeekr
+  userPassword: 5vfJMkr1DcoAFQ7iyC
+  nacosUri: "http://nacos:4T5N8zkVQBBYcmL@nacos-headless.zeekr-nacos.svc.cluster.local:8848"
+  backupDebug: false
+etcd:
+  startFromSnapshot: yes
+  etcdInitSnapshotFilename: db-2024-04-19_05-11
+  etcdInitialClusterState: new
+  debug: false
+ingress:
+  privateGroupName: zxc-gateway-private-ingress
+  privateSubnetIds: subnet-09410953a2c18095e,subnet-09d0b474730c33260
+  publicGroupName: zxc-mtls-public-ingress
+  publicSubnetIds: subnet-04b17e890ff26f830,subnet-0c7f7b1dc8d05bcd7
+  apisixCertificateArn: arn:aws:acm:eu-central-1:039287201034:certificate/16faba97-2fe2-423c-842b-89f848623f79
+  apisixHost: zxc-apisix-dashboard-eu.zeekrlife-test.com
+  privateCertificateArn: arn:aws:acm:eu-central-1:039287201034:certificate/16faba97-2fe2-423c-842b-89f848623f79
+  zxcHost: zxc-uat-eu.zeekrlife-test.com
+  publicCertificateArn: arn:aws:acm:eu-central-1:039287201034:certificate/16faba97-2fe2-423c-842b-89f848623f79
+  publicHost: zxc-uat-eu.zeekrlife-test.com
+  publicTrustStore: arn:aws:elasticloadbalancing:eu-central-1:039287201034:truststore/zxc-test-mtls/d2d47bf51328e228
+  publicWafAclArn: arn:aws:wafv2:eu-central-1:039287201034:regional/webacl/aws-eu-test-waf/a0ef9d25-b607-48ff-8cbe-00a8f9822d87

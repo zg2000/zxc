@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-central-1:866665982863:certificate/5ac5e742-971e-4e3b-8873-cc6c066dae4e
+    alb.ingress.kubernetes.io/group.name: zpes-private-ingress
+    alb.ingress.kubernetes.io/group.order: "0"
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443},{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/success-codes: 200-499
+    alb.ingress.kubernetes.io/target-type: ip
+  name: zpes-digital-alb
+spec:
+  ingressClassName: alb
+  rules:
+  - host: zpes-eu.zeekrlife.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: zpes-frontend
+            port:
+              number: 80
+        path: /
+        pathType: Prefix

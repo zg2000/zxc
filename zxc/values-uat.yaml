@@ -1,0 +1,145 @@
+config:
+  pub:
+    DeployEnv: uat-eu
+microservice:
+  deployService:
+    conf:
+      DeployEnv: uat-eu
+      JAVA_OPTS: -Xms4096m -Xmx4096m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/edge-deploy-service
+      tag: 20240417202914-12-dev_eu
+    replicas: 1
+    resources:
+      limits:
+        cpu: 4
+        memory: 8Gi
+      requests:
+        cpu: 1
+        memory: 2Gi
+  connManager:
+    conf:
+      DeployEnv: uat-eu
+      JAVA_OPTS: -Xms2048m -Xmx4096m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/edge-conn-manager
+      tag: 20240417202914-12-dev_eu
+    replicas: 1
+    resources:
+      limits:
+        cpu: 4
+        memory: 8Gi
+      requests:
+        cpu: 1
+        memory: 2Gi
+  heartbeatService:
+    conf:
+      DeployEnv: uat-eu
+      JAVA_OPTS: -Xms2048m -Xmx4096m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/edge-heartbeat-service
+      tag: 20240417202914-12-dev_eu
+    replicas: 1
+    resources:
+      limits:
+        cpu: 4
+        memory: 8Gi
+      requests:
+        cpu: 1
+        memory: 2Gi      
+  announceService:
+    conf:
+      DeployEnv: uat-eu
+      JAVA_OPTS: -Xms2048m -Xmx4096m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/edge-announce-service
+      tag: 20240417202914-12-dev_eu
+    replicas: 1
+    resources:
+      limits:
+        cpu: 4
+        memory: 8Gi
+      requests:
+        cpu: 1
+        memory: 2Gi     
+  cloudFileService:
+    conf:
+      DeployEnv: uat-eu
+      JAVA_OPTS: -Xms1024m -Xmx2048m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/edge-cloudfile-service
+      tag: 20240417202914-12-dev_eu
+    replicas: 1
+    resources:
+      limits:
+        cpu: 4
+        memory: 8Gi
+      requests:
+        cpu: 1
+        memory: 2Gi
+  authSecurity:
+    conf:
+      DeployEnv: uat-eu
+      JAVA_OPTS: -Xms4096m -Xmx4096m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/auth-security
+      tag: 20240417201811-9-dev-eu
+    replicas: 1
+    resources:
+      limits:
+        cpu: 4
+        memory: 8Gi
+      requests:
+        cpu: 1
+        memory: 2Gi
+  vehicleManager:
+    conf:
+      DeployEnv: uat-eu
+      JAVA_OPTS: -Xms2048m -Xmx4096m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/vehicle-manager
+      tag: 20240425115548-241-feat-20240425-vehicleSync-eu
+    replicas: 1
+    resources:
+      limits:
+        cpu: 4
+        memory: 8Gi
+      requests:
+        cpu: 1
+        memory: 2Gi
+      
+secretProviderClass:
+  create: true
+  secretRoleArn: arn:aws:iam::039287201034:role/eksctl-ota-uat-addon-iamserviceaccount-zxc-ua-Role1-PNDgIehYgJOW
+#  secretsManagerName: "uat/swe/zxc/config"
+  secretsManagerName: "aws-eu-data-uat-swe-zeekrsecret"
+  secretsName: "zxc-secret"
+  secretsProvideName: "zxc-secrets-provider"
+  secretMapping:
+    - secretManagerKey: "zxc_redis_password"
+      envKey: "zxc_redis_password"
+      secretsName: "zxc-secret"
+    - secretManagerKey: "zxc_mysql_password"
+      envKey: "zxc_mysql_password"
+      secretsName: "zxc-secret"
+    - secretManagerKey: "zxc_mysql_username"
+      envKey: "zxc_mysql_username"
+      secretsName: "zxc-secret"
+    - secretManagerKey: "zxc_nacos_username"
+      envKey: "zxc_nacos_username"
+      secretsName: "zxc-secret"
+    - secretManagerKey: "zxc_nacos_password"
+      envKey: "zxc_nacos_password"
+      secretsName: "zxc-secret"
+    - secretManagerKey: "zxc_mqtt_password"
+      envKey: "zxc_mqtt_password"
+      secretsName: "zxc-secret"
+    - secretManagerKey: "zxc_mqtt_username"
+      envKey: "zxc_mqtt_username"
+      secretsName: "zxc-secret"
+    - secretManagerKey: "zsh_pub_key_zpes_zxc"
+      envKey: "zsh_pub_key_zpes_zxc"
+      secretsName: "zxc-secret"
+    - secretManagerKey: "zsh_pub_key_zpes_zsh"
+      envKey: "zsh_pub_key_zpes_zsh"
+      secretsName: "zxc-secret"

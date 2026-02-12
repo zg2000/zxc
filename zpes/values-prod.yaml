@@ -1,0 +1,304 @@
+config:
+  pub:
+    DeployEnv: eu-prod
+microservice:
+  admin:
+    conf:
+      DeployEnv: eu-prod
+      JAVA_OPTS: -Xms4096m -Xmx4096m
+    image:
+      repository: devops-harbor.zeekrlife.com/zadigprod/zpes-admin
+      tag: 20240527203757-174-feature-eu
+    replicas: 2
+    resources:
+      limits:
+        cpu: 2
+        memory: 8Gi
+      requests:
+        cpu: 1
+        memory: 8Gi
+  edgeDesign:
+    conf:
+      DeployEnv: eu-prod
+      JAVA_OPTS: -Xms2048m -Xmx2048m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/zpes-edge-design
+      tag: 20240422161027-42-feature-eu
+    replicas: 2
+    resources:
+      limits:
+        cpu: 2
+        memory: 4Gi
+      requests:
+        cpu: 1
+        memory: 4Gi
+  dataConfig:
+    conf:
+      DeployEnv: eu-prod
+      JAVA_OPTS: -Xms2048m -Xmx2048m
+    image:
+      repository: devops-harbor.zeekrlife.com/zadigprod/zpes-data-config
+      tag: 20240527203757-174-feature-feature-eu
+    replicas: 2
+    resources:
+      limits:
+        cpu: 2
+        memory: 4Gi
+      requests:
+        cpu: 1
+        memory: 4Gi
+  downloadService:
+    conf:
+      DeployEnv: eu-prod
+      JAVA_OPTS: -Xms3072m -Xmx3072m
+    image:
+      repository: devops-harbor.zeekrlife.com/zadigprod/zpes-download-servic
+      tag: 20240527203757-174-feature-eu
+    replicas: 2
+    resources:
+      limits:
+        cpu: 3
+        memory: 6Gi
+      requests:
+        cpu: 1
+        memory: 6Gi
+  fileManager:
+    conf:
+      DeployEnv: eu-prod
+      JAVA_OPTS: -Xms2048m -Xmx2048m
+    image:
+      repository: devops-harbor.zeekrlife.com/zadigprod/zpes-file-manager
+      tag: 20240527203757-174-feature-eu
+    replicas: 2
+    resources:
+      limits:
+        cpu: 2
+        memory: 4Gi
+      requests:
+        cpu: 1
+        memory: 4Gi
+  job:
+    conf:
+      DeployEnv: eu-prod
+      JAVA_OPTS: -Xms4096m -Xmx4096m
+    image:
+      repository: devops-harbor.zeekrlife.com/zadigprod/zpes-job
+      tag: 20240528144636-176-feature-eu
+    replicas: 3
+    resources:
+      limits:
+        cpu: 4
+        memory: 8Gi
+      requests:
+        cpu: 2
+        memory: 8Gi
+  logConfig:
+    conf:
+      DeployEnv: eu-prod
+      JAVA_OPTS: -Xms2048m -Xmx2048m
+    image:
+      repository: devops-harbor.zeekrlife.com/zadigprod/zpes-log-config
+      tag: 20240508150152-60-feature-eu
+    replicas: 2
+    resources:
+      limits:
+        cpu: 2
+        memory: 4Gi
+      requests:
+        cpu: 1
+        memory: 4Gi
+  logData:
+    conf:
+      DeployEnv: eu-prod
+      JAVA_OPTS: -Xms2048m -Xmx2048m
+    image:
+      repository: devops-harbor.zeekrlife.com/zadigprod/zpes-log-data
+      tag: 20240527203757-174-feature-eu
+    replicas: 2
+    resources:
+      limits:
+        cpu: 2
+        memory: 4Gi
+      requests:
+        cpu: 1
+        memory: 4Gi
+  metric:
+    conf:
+      DeployEnv: eu-prod
+      JAVA_OPTS: -Xms2048m -Xmx2048m
+    image:
+      repository: devops-harbor.zeekrlife.com/zadigprod/zpes-metric
+      tag: 20240508150152-60-feature-eu
+    replicas: 2
+    resources:
+      limits:
+        cpu: 2
+        memory: 4Gi
+      requests:
+        cpu: 1
+        memory: 4Gi
+  security:
+    conf:
+      DeployEnv: eu-prod
+      JAVA_OPTS: -Xms2048m -Xmx2048m
+    image:
+      repository: devops-harbor.zeekrlife.com/zadigprod/zpes-security
+      tag: 20240508150152-60-feature-eu
+    replicas: 2
+    resources:
+      limits:
+        cpu: 2
+        memory: 4Gi
+      requests:
+        cpu: 1
+        memory: 4Gi
+  stat:
+    conf:
+      DeployEnv: eu-prod
+      JAVA_OPTS: -Xms2048m -Xmx2048m
+    image:
+      repository: devops-harbor.zeekrlife.com/zadigprod/zpes-stat
+      tag: 20240508150152-60-feature-eu
+    replicas: 2
+    resources:
+      limits:
+        cpu: 2
+        memory: 4Gi
+      requests:
+        cpu: 1
+        memory: 4Gi
+  vehicleMeta:
+    conf:
+      DeployEnv: eu-prod
+      JAVA_OPTS: -Xms2048m -Xmx2048m
+    image:
+      repository: devops-harbor.zeekrlife.com/zadigprod/zpes-vehicle-meta
+      tag: 20240527203757-174-feature-eu
+    replicas: 2
+    resources:
+      limits:
+        cpu: 2
+        memory: 4Gi
+      requests:
+        cpu: 1
+        memory: 4Gi
+  frontend:
+    conf:
+      DeployEnv: eu-prod
+      JAVA_OPTS: -Xms3072m -Xmx3072m
+    image:
+      repository: devops-harbor.zeekrlife.com/zadigprod/zpes-frontend
+      tag: 20240524182332-170-feature-common
+    replicas: 2
+    resources:
+      limits:
+        cpu: 3
+        memory: 6Gi
+      requests:
+        cpu: 1
+        memory: 4Gi
+  environmentConfig:
+    conf:
+      DeployEnv: eu-prod
+      JAVA_OPTS: -Xms2048m -Xmx2048m
+    image:
+      repository: devops-harbor.zeekrlife.com/zadigprod/zpes-environment-config
+      tag: 20240508150152-60-feature-eu
+    replicas: 2
+    resources:
+      limits:
+        cpu: 2
+        memory: 4Gi
+      requests:
+        cpu: 1
+        memory: 4Gi
+secretProviderClass:
+  create: true
+  secretRoleArn: arn:aws:iam::866665982863:role/EksSecretsProviderRole-zpes_prod
+  secretsManagerName: "prod/swe/zpes/config"
+  secretsName: "zpes-secret"
+  secretsProvideName: "zpes-secrets-provider"
+  secretMapping:
+    - secretManagerKey: "zpes_redis_password"
+      envKey: "zpes_redis_password"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_mysql_password"
+      envKey: "zpes_mysql_password"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_mysql_username"
+      envKey: "zpes_mysql_username"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_holo_username"
+      envKey: "zpes_holo_username"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_holo_password"
+      envKey: "zpes_holo_password"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_nacos_host"
+      envKey: "zpes_nacos_host"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_nacos_username"
+      envKey: "zpes_nacos_username"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_nacos_password"
+      envKey: "zpes_nacos_password"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_mysql_host"
+      envKey: "zpes_mysql_host"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_mysql_port"
+      envKey: "zpes_mysql_port"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_mysql_job_host"
+      envKey: "zpes_mysql_job_host"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_mysql_job_port"
+      envKey: "zpes_mysql_job_port"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_mysql_job_username"
+      envKey: "zpes_mysql_job_username"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_mysql_job_password"
+      envKey: "zpes_mysql_job_password"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_redis_host"
+      envKey: "zpes_redis_host"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_redis_job_host"
+      envKey: "zpes_redis_job_host"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_redis_job_password"
+      envKey: "zpes_redis_job_password"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_kafka_broker"
+      envKey: "zpes_kafka_broker"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zxc_external_kafka_broker"
+      envKey: "zxc_external_kafka_broker"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_xxl_job_host"
+      envKey: "zpes_xxl_job_host"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_xxl_job_access_token"
+      envKey: "zpes_xxl_job_access_token"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_holo_host"
+      envKey: "zpes_holo_host"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_holo_port"
+      envKey: "zpes_holo_port"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zxc_job_private_key"
+      envKey: "zxc_job_private_key"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zxc_vehicle_private_key"
+      envKey: "zxc_vehicle_private_key"
+      secretsName: "zpes-secret"
+
+ingress:
+  zpesDigital:
+    ingressCertificate: "arn:aws:acm:eu-central-1:866665982863:certificate/5ac5e742-971e-4e3b-8873-cc6c066dae4e"
+    url: "zpes-digital-eu.zeekrlife.com"
+    groupName: "zpes-private-ingress"
+    ingressName: "zpes-digital"
+  

@@ -1,0 +1,25 @@
+output "rds_security_group_id" {
+  value = module.data_rds_instance.security_group_id
+}
+output "rds_arn" {
+  value = module.data_rds_instance.arn
+}
+output "rds_endpoint" {
+  value = module.data_rds_instance.endpoint
+}
+output "rds_address" {
+  value = module.data_rds_instance.address
+}
+output "rds_port" {
+  value = module.data_rds_instance.port
+}
+output "rds_username" {
+  value = local.root_user
+}
+output "rds_password" {
+  value = local.root_password
+  sensitive = true
+}
+output "rds_db_name" {
+  value = local.mysql_config.db_name
+}

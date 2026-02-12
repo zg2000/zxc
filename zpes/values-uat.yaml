@@ -1,0 +1,303 @@
+config:
+  pub:
+    DeployEnv: eu-uat
+microservice:
+  admin:
+    conf:
+      DeployEnv: eu-uat
+      JAVA_OPTS: -Xms2048m -Xmx4096m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/zpes-admin
+      tag: 20240507162047-58-feature-eu
+    replicas: 2
+    resources:
+      limits:
+        cpu: 4
+        memory: 8Gi
+      requests:
+        cpu: 1
+        memory: 4Gi
+  edgeDesign:
+    conf:
+      DeployEnv: eu-uat
+      JAVA_OPTS: -Xms2048m -Xmx2048m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/zpes-edge-design
+      tag: 20240422161027-42-feature-eu
+    replicas: 2
+    resources:
+      limits:
+        cpu: 2
+        memory: 4Gi
+      requests:
+        cpu: 1
+        memory: 4Gi
+  dataConfig:
+    conf:
+      DeployEnv: eu-uat
+      JAVA_OPTS: -Xms1024m -Xmx2048m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/zpes-data-config
+      tag: 20240507131744-57-feature-feature-eu
+    replicas: 2
+    resources:
+      limits:
+        cpu: 1
+        memory: 4Gi
+      requests:
+        cpu: 200m
+        memory: 500m
+  downloadService:
+    conf:
+      DeployEnv: eu-uat
+      JAVA_OPTS: -Xms1024m -Xmx2048m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/zpes-download-servic
+      tag: 20240422094808-38-feature-eu
+    replicas: 1
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 4Gi
+      requests:
+        cpu: 200m
+        memory: 500m
+  fileManager:
+    conf:
+      DeployEnv: eu-uat
+      JAVA_OPTS: -Xms1024m -Xmx2048m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/zpes-file-manager
+      tag: 20240417130740-32-feature-eu
+    replicas: 1
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 4Gi
+      requests:
+        cpu: 200m
+        memory: 500m
+  job:
+    conf:
+      DeployEnv: eu-uat
+      JAVA_OPTS: -Xms1024m -Xmx2048m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/zpes-job
+      tag: 20240419144226-37-feature-eu
+    replicas: 3
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 4Gi
+      requests:
+        cpu: 200m
+        memory: 500m
+  logConfig:
+    conf:
+      DeployEnv: eu-uat
+      JAVA_OPTS: -Xms1024m -Xmx2048m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/zpes-log-config
+      tag: 20240412104459-19-feature-eu
+    replicas: 2
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 4Gi
+      requests:
+        cpu: 200m
+        memory: 500m
+  logData:
+    conf:
+      DeployEnv: eu-uat
+      JAVA_OPTS: -Xms1024m -Xmx2048m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/zpes-log-data
+      tag: 20240412104459-19-feature-eu_work
+    replicas: 2
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 4Gi
+      requests:
+        cpu: 200m
+        memory: 500m
+  metric:
+    conf:
+      DeployEnv: eu-uat
+      JAVA_OPTS: -Xms1024m -Xmx2048m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/zpes-metric
+      tag: 20240507165441-59-feature-eu
+    replicas: 1
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 4Gi
+      requests:
+        cpu: 200m
+        memory: 500m
+  security:
+    conf:
+      DeployEnv: eu-uat
+      JAVA_OPTS: -Xms1024m -Xmx2048m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/zpes-security
+      tag: 20240426180422-55-feature-eu
+    replicas: 2
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 4Gi
+      requests:
+        cpu: 200m
+        memory: 500m
+  stat:
+    conf:
+      DeployEnv: eu-uat
+      JAVA_OPTS: -Xms1024m -Xmx2048m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/zpes-stat
+      tag: 20240412104459-19-feature-eu
+    replicas: 2
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 4Gi
+      requests:
+        cpu: 200m
+        memory: 500m
+  vehicleMeta:
+    conf:
+      DeployEnv: eu-uat
+      JAVA_OPTS: -Xms1024m -Xmx2048m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/zpes-vehicle-meta
+      tag: 20240423161825-43-feature-eu
+    replicas: 1
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 4Gi
+      requests:
+        cpu: 200m
+        memory: 500m
+  frontend:
+    conf:
+      DeployEnv: eu-uat
+      JAVA_OPTS: -Xms1024m -Xmx2048m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/zpes-frontend
+      tag: 20240426131829-52-release-eu_common
+    replicas: 1
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 4Gi
+      requests:
+        cpu: 200m
+        memory: 500m
+  environmentConfig:
+    conf:
+      DeployEnv: eu-uat
+      JAVA_OPTS: -Xms1024m -Xmx2048m
+    image:
+      repository: zeekreuuatcontainerrepository.azurecr.io/zadig/zpes-environment-config
+      tag: 20240412104459-19-feature-eu
+    replicas: 1
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 4Gi
+      requests:
+        cpu: 200m
+        memory: 500m
+secretProviderClass:
+  create: true
+  secretRoleArn: "arn:aws:iam::039287201034:role/eksctl-ota-uat-addon-iamserviceaccount-zpes-u-Role1-cYXv9y1ozOFV"
+  secretsManagerName: "uat/swe/zpes/config"
+  secretsName: "zpes-secret"
+  secretsProvideName: "zpes-secrets-provider"
+  secretMapping:
+    - secretManagerKey: "zpes_redis_password"
+      envKey: "zpes_redis_password"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_mysql_password"
+      envKey: "zpes_mysql_password"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_mysql_username"
+      envKey: "zpes_mysql_username"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_holo_username"
+      envKey: "zpes_holo_username"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_holo_password"
+      envKey: "zpes_holo_password"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_nacos_host"
+      envKey: "zpes_nacos_host"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_nacos_username"
+      envKey: "zpes_nacos_username"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_nacos_password"
+      envKey: "zpes_nacos_password"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_mysql_host"
+      envKey: "zpes_mysql_host"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_mysql_port"
+      envKey: "zpes_mysql_port"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_mysql_job_host"
+      envKey: "zpes_mysql_job_host"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_mysql_job_port"
+      envKey: "zpes_mysql_job_port"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_mysql_job_username"
+      envKey: "zpes_mysql_job_username"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_mysql_job_password"
+      envKey: "zpes_mysql_job_password"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_redis_host"
+      envKey: "zpes_redis_host"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_redis_job_host"
+      envKey: "zpes_redis_job_host"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_redis_job_password"
+      envKey: "zpes_redis_job_password"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_kafka_broker"
+      envKey: "zpes_kafka_broker"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zxc_external_kafka_broker"
+      envKey: "zxc_external_kafka_broker"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_xxl_job_host"
+      envKey: "zpes_xxl_job_host"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_xxl_job_access_token"
+      envKey: "zpes_xxl_job_access_token"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_holo_host"
+      envKey: "zpes_holo_host"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zpes_holo_port"
+      envKey: "zpes_holo_port"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zxc_job_private_key"
+      envKey: "zxc_job_private_key"
+      secretsName: "zpes-secret"
+    - secretManagerKey: "zxc_vehicle_private_key"
+      envKey: "zxc_vehicle_private_key"
+      secretsName: "zpes-secret"
+ingress:
+  zpesDigital:
+    ingressCertificate: "arn:aws:acm:eu-central-1:039287201034:certificate/16faba97-2fe2-423c-842b-89f848623f79"
+    url: "zpes-digital-uat-eu.zeekrlife-test.com"
+    groupName: "zpes-private-ingress"
+    ingressName: "zpes-digital"
+  

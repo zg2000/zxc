@@ -1,0 +1,240 @@
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: apisix-etcd
+  labels:
+    app.kubernetes.io/name: apisix-etcd
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: apisix-etcd
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: apisix-etcd
+    spec:
+{{ if .Values.etcd.startFromSnapshot }}
+      initContainers:
+        - name: init-etcd
+          image: busybox 
+          command: ['sh', '-c', 'cp /snapshot-volume/db-* /snapshot-dir/ || :']
+          volumeMounts:
+          - name: snapshot-volume
+            mountPath: "/snapshot-volume"
+          - name: snapshot-dir
+            mountPath: "/snapshot-dir"
+{{ end }}
+      containers:
+        - name: apisix-etcd
+          image: docker.io/bitnami/etcd:3.5.4-debian-11-r14
+          ports:
+            - name: client
+              containerPort: 2379
+              protocol: TCP
+            - name: peer
+              containerPort: 2380
+              protocol: TCP
+          env:
+            - name: ETCD_CLUSTER_DOMAIN
+              value: apisix-etcd-headless.apisix.svc.cluster.local
+            - name: BITNAMI_DEBUG
+              value: "{{ .Values.etcd.debug }}"
+            - name: MY_STS_NAME
+              value: apisix-etcd
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            - name: ETCDCTL_API
+              value: '3'
+            - name: ETCD_ON_K8S
+              value: 'yes'
+            - name: ETCD_START_FROM_SNAPSHOT
+              value: "{{ .Values.etcd.startFromSnapshot }}"
+            - name: ETCD_INIT_SNAPSHOT_FILENAME
+              value: "{{ .Values.etcd.etcdInitSnapshotFilename }}"
+            - name: ETCD_INIT_SNAPSHOTS_DIR
+              value: '/snapshots'
+            - name: ETCD_DISASTER_RECOVERY
+              value: 'no'
+            - name: ETCD_NAME
+              value: $(MY_POD_NAME)
+            - name: ETCD_DATA_DIR
+              value: /bitnami/etcd/data
+            - name: ETCD_LOG_LEVEL
+              value: info
+            - name: ALLOW_NONE_AUTHENTICATION
+              value: 'yes'
+            - name: ETCD_AUTH_TOKEN
+              value: "jwt,priv-key=/opt/bitnami/etcd/certs/token/jwt-token.pem,sign-method=RS256,ttl=10m"
+            - name: ETCD_ADVERTISE_CLIENT_URLS
+              value: http://$(MY_POD_NAME).apisix-etcd-headless.apisix.svc.cluster.local:2379,http://apisix-etcd.apisix.svc.cluster.local:2379
+            - name: ETCD_LISTEN_CLIENT_URLS
+              value: http://0.0.0.0:2379
+            - name: ETCD_INITIAL_ADVERTISE_PEER_URLS
+              value: http://$(MY_POD_NAME).apisix-etcd-headless.apisix.svc.cluster.local:2380
+            - name: ETCD_LISTEN_PEER_URLS
+              value: http://0.0.0.0:2380
+            - name: ETCD_INITIAL_CLUSTER_TOKEN
+              value: etcd-cluster-k8s
+            - name: ETCD_INITIAL_CLUSTER_STATE
+              value: "{{ .Values.etcd.etcdInitialClusterState }}"
+            - name: ETCD_INITIAL_CLUSTER
+              value: apisix-etcd-0=http://apisix-etcd-0.apisix-etcd-headless.apisix.svc.cluster.local:2380,apisix-etcd-1=http://apisix-etcd-1.apisix-etcd-headless.apisix.svc.cluster.local:2380
+          resources: {}
+          volumeMounts:
+            - name: data
+              mountPath: /bitnami/etcd
+            - mountPath: /opt/bitnami/etcd/certs/token/	
+              name: etcd-jwt-token	
+              readOnly: true
+            - name: snapshot-dir
+              mountPath: /snapshots
+          lifecycle:	
+            preStop:	
+              exec:	
+                command:	
+                  - /opt/bitnami/scripts/etcd/prestop.sh
+          livenessProbe:
+            exec:
+              command:
+                - /opt/bitnami/scripts/etcd/healthcheck.sh
+            initialDelaySeconds: 60
+            timeoutSeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
+          readinessProbe:
+            exec:
+              command:
+                - /opt/bitnami/scripts/etcd/healthcheck.sh
+            initialDelaySeconds: 60
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 5
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 1001
+            runAsNonRoot: true
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccountName: default
+      serviceAccount: default
+      securityContext:
+        fsGroup: 1001
+      affinity:
+        nodeAffinity:	
+          requiredDuringSchedulingIgnoredDuringExecution:	
+            nodeSelectorTerms:	
+              - matchExpressions:	
+                  - key: app	
+                    operator: In	
+                    values:	
+                      - apisix
+      schedulerName: default-scheduler
+      tolerations:
+        - effect: NoSchedule
+          key: app
+          operator: Equal
+          value: apisix
+      volumes:
+        - name: etcd-jwt-token
+          secret:
+            defaultMode: 256
+            secretName: apisix-etcd-jwt-token
+        - name: snapshot-volume
+          persistentVolumeClaim:
+            claimName: etcd-backup
+        - name: snapshot-dir
+          emptyDir: {}
+  volumeClaimTemplates:
+    - kind: PersistentVolumeClaim
+      apiVersion: v1
+      metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 8Gi
+        storageClassName: gp2
+        volumeMode: Filesystem
+  serviceName: apisix-etcd-headless
+  podManagementPolicy: Parallel
+  updateStrategy:
+    type: RollingUpdate
+  revisionHistoryLimit: 10
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: apisix-etcd-headless
+  labels:
+    app.kubernetes.io/name: apisix-etcd
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: 'true'
+spec:
+  ports:
+    - name: client
+      protocol: TCP
+      port: 2379
+      targetPort: client
+    - name: peer
+      protocol: TCP
+      port: 2380
+      targetPort: peer
+  selector:
+    app.kubernetes.io/name: apisix-etcd
+  type: ClusterIP
+  clusterIP: None
+  clusterIPs:
+    - None
+  sessionAffinity: None
+  publishNotReadyAddresses: true
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: apisix-etcd
+  labels:
+    app.kubernetes.io/name: apisix-etcd
+spec:
+  ports:
+    - name: client
+      protocol: TCP
+      port: 2379
+      targetPort: client
+    - name: peer
+      protocol: TCP
+      port: 2380
+      targetPort: peer
+  selector:
+    app.kubernetes.io/name: apisix-etcd
+  type: ClusterIP
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: apisix-etcd
+  labels:
+    app.kubernetes.io/name: etcd
+spec:
+  minAvailable: 51%
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: etcd

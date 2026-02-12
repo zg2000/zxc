@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: zpes-file-manager
+  name: zpes-file-manager
+spec:
+  #副本数量
+  replicas: {{ .Values.microservice.fileManager.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: zpes-file-manager
+  minReadySeconds: 30 #设置升级延迟时间15秒,等待15秒后升级
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1   #升级过程中最多可以比原先设置多出的POD数量
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: zpes-file-manager
+        monitortype: backend
+    spec:
+      #以下内容为可选,容器调度策略，保证同一deployment的多个副本位于不同的机器上，防止单节点挂掉导致服务不可用,由于涉及到要与运维沟通资源情况,无法直接给予固定配置。
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - zpes-file-manager
+                topologyKey: kubernetes.io/hostname
+      containers:
+        - image: {{ .Values.microservice.fileManager.image.repository }}:{{ .Values.microservice.fileManager.image.tag }}
+          imagePullPolicy: IfNotPresent
+          name: zpes-file-manager
+          ports:
+            - containerPort: 8090
+              name: backend
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                #存放公共环境变量，比如：数据库，redis，nacos等连接信息，每个项目的各个微服务基本都是一样的。
+                name: pub-cm
+            - configMapRef:
+                #存放个性化配置，对于个别的服务，除了公共变量外，会涉及其他引用信息。
+                name: zpes-file-manager-cm
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            {{- if .Values.secretProviderClass.create }}
+            {{- if .Values.secretProviderClass.secretMapping }}
+            {{- range .Values.secretProviderClass.secretMapping }}
+            - name: {{ .envKey }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .secretsName }}
+                  key: {{ .envKey}}
+              {{- end }}
+            {{- end }}
+            {{- end }}
+          resources:
+            #设定以下是设定服务资源根据你的项目实际情况来
+            limits: # limits是代表的资源上限,服务能消耗的资源上限
+              cpu: {{ .Values.microservice.fileManager.resources.limits.cpu }} #{limits_cpu}(必须),目前默认单位为m,如果申请一核则为1024m,以此类推,默认则为500m
+              memory: {{ .Values.microservice.fileManager.resources.limits.memory }} #{limits_mem}(必须),目前默认单位为Mi,如果申请1G内存则为1024Mi,以此类推,默认则为2048Mi
+            requests: # requests是服务所需最小的启动资源,设置后如果node达不到这个资源要求就会部署失败
+              cpu: {{ .Values.microservice.fileManager.resources.requests.cpu }} #{requests_cpu}(必须),目前默认单位为m,如果申请一核则为1024m,以此类推,默认则为250m
+              memory: {{ .Values.microservice.fileManager.resources.requests.memory }} #(必须),目前默认单位为Mi,如果申请1G内存则为1024Mi,以此类推,默认则为500Mi
+          volumeMounts:
+            - name: host-time
+              readOnly: true
+              mountPath: /etc/localtime
+          {{- if .Values.secretProviderClass.create }}
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets"
+              readOnly: true
+          {{- end }}
+      volumes:
+        - name: host-time
+          hostPath:
+            path: /etc/localtime
+            type: ''
+      {{- if .Values.secretProviderClass.create }}
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: {{ .Values.secretProviderClass.secretsProvideName }}
+      {{- end }}
+      imagePullSecrets: # 写死,前提是要执行这个凭证创建命令
+        - name: harborha-secret001fe
+      serviceAccountName: zpes-secrets-sa
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zpes-file-manager
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8090
+      targetPort: 8090
+  selector:
+    app: zpes-file-manager
+---
+apiVersion: v1
+data:
+  DeployEnv: {{ .Values.microservice.fileManager.conf.DeployEnv }}
+  JAVA_OPTS: {{ .Values.microservice.fileManager.conf.JAVA_OPTS }}
+kind: ConfigMap
+metadata:
+  name: zpes-file-manager-cm

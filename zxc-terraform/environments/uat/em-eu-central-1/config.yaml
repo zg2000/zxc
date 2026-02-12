@@ -1,0 +1,88 @@
+basic:
+  resource-prefix: awseu-vdp-em
+  iam-prefix: awseu-
+  tags:
+    product_code: VDP-EM
+    product_name: VDP-EM
+vpc:
+  #本地的会被忽略
+  default-cidr-block: 10.0.0.0/16
+  private-az-count: 3
+  public-az-count: 2
+
+redis:
+  create: true
+  create-private-subnet-group: true
+  create_cloudwatch_log_group: true
+  config:
+    infix_name: cache
+    engine: redis
+    engine_version: 6.2
+    node_type: cache.m6g.large
+    num_cache_clusters: 2
+
+
+mysql:
+  create: true
+  create-private-subnet-group: true
+  config:
+    infix_name: data
+    engine: mysql
+    engine_version: 8.0.35
+    instance_class: db.m5.large
+    db_name: vdp
+    backup_retention_period: 7
+
+redshift:
+  create: true
+  create-private-subnet-group: true
+  config:
+    infix_name: data
+    database_name: vdp
+    skip_final_snapshot: true
+    node_type: ra3.xlplus
+    number_of_nodes: 1
+    encrypted: true
+
+kafka:
+  front:
+    create: false
+    config:
+      kafka_version: 2.8.1
+      number_of_broker_nodes: 2
+      broker_node_instance_type: kafka.t3.small
+      storage_volume_size: 1000
+      create_configuration: false
+      configuration_server_properties: |
+        default.replication.factor=2
+        min.insync.replicas=1
+        log.retention.hours=24
+    import-outputs:
+      flag: true
+  back:
+    create: false
+    import-outputs:
+      flag: true
+      arn: arn:aws:kafka:eu-central-1:865175738380:cluster/awseu-vdp-em-vdp-sit-kafka22/b4381922-ac34-4840-a9a4-63fe7334b2dc-1
+      security_group_id: sg-0803b30fdc25c87d8
+      bootstrap_brokers: b-2.awseuvdpemvdpsitkaf.banz12.c1.kafka.eu-central-1.amazonaws.com:9092,b-3.awseuvdpemvdpsitkaf.banz12.c1.kafka.eu-central-1.amazonaws.com:9092,b-1.awseuvdpemvdpsitkaf.banz12.c1.kafka.eu-central-1.amazonaws.com:9092
+iam:
+  service-role:
+    glue:
+      S3:
+        - a
+        - b
+flink:
+  m241-parse:
+    create: true
+    config:
+      runtime_environment: FLINK-1_13
+glue:
+  m241-all-data:
+    create: true
+  m241-raw-body:
+    create: false
+
+
+
+
